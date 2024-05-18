@@ -1,0 +1,29 @@
+{
+  "type": "module",
+  "name": "prime_detector",
+  "version": "0.69.101",
+  "description": "User detection system by observing specific text selection behavior. Potentially breaches GDPR.",
+  "author": "Timur Olur",
+  "license": "SEE LICENSE IN LICENSE",
+  "scripts": {
+    "build": "tsc --emitDeclarationOnly && esbuild ./index.js --outfile=./dist/prime_detector.cjs --format=cjs  && esbuild ./index.js --outfile=./dist/prime_detector.js --format=esm && esbuild index.js --global-name='prime_detector' --bundle --minify --target=chrome98,firefox98 --outfile=./dist/prime_detector.min.js"
+  },
+  "main": "./dist/prime_detector.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "default": "./dist/prime_detector.js",
+        "types": "./dist/index.d.ts"
+      },
+      "require": {
+        "default": "./dist/prime_detector.cjs",
+        "types": "./dist/index.d.ts"
+      }
+    }
+  },
+  "devDependencies": {
+    "esbuild": "^0.21.3",
+    "typescript": "^5.4.5"
+  }
+}
