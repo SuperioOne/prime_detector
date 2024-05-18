@@ -2,6 +2,11 @@
   "type": "module",
   "name": "prime_detector",
   "version": "0.69.101",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SuperioOne/prime_detector"
+  },
+  "homepage": "https://github.com/SuperioOne/prime_detector",
   "description": "User detection system by observing specific text selection behavior. Potentially breaches GDPR.",
   "author": "Timur Olur",
   "license": "SEE LICENSE IN LICENSE",

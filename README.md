@@ -1,4 +1,4 @@
-# Prime Detection (No, it's nothing to the with prime numbers)
+# Prime Detection (No, it's nothing to do with prime numbers)
 
 Basic tracker to detect users with OCD triggering text selection behaviors.
 
@@ -6,7 +6,7 @@ Basic tracker to detect users with OCD triggering text selection behaviors.
 
 Add `prime_detector.min.js` and use global `prime_detector` to setup your handlers.
 
-```javascript
+```html
 <!DOCTYPE html>
 <html lang="">
   <head>
@@ -45,7 +45,7 @@ window.addEventListener("brazil-mentioned", () => {
 
 ## Customizing the listener
 
-By default, `init_listener` listens `selectionchange` event on `document` and dispatches custom `brazil-mentioned` event on `window`. You can customize event names, targets and source nodes, event rate etc.
+By default, `init_listener` listens `selectionchange` event on `document` and dispatches custom `brazil-mentioned` event on `window`. You can customize event name, target and source nodes, event debouncer etc.
 
 ```javascript
 const options = {
@@ -53,7 +53,9 @@ const options = {
     source: my_article,    // Source DOM node to attach 'selectionchange' event. Default is 'document'.
     debounce: 1500,        // Selection event debounce time. Default is 1000 milliseconds.
     event_name: "gotcha"   // Custom event name. Default event name is 'brazil-mentioned' to make it more immersive.
-}
+};
+
+const handle = init_listener(options);
 ```
 
 ## Custom
