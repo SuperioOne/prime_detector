@@ -1,7 +1,7 @@
 {
   "type": "module",
   "name": "prime_detector",
-  "version": "0.69.101",
+  "version": "0.69.102",
   "repository": {
     "type": "git",
     "url": "https://github.com/SuperioOne/prime_detector"

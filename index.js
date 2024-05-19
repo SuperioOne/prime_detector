@@ -1,10 +1,5 @@
 /**
  * @typedef {{
- *    timeout:number;
- *    on_error: (err:unknown) => void;
- *  }} DebouncerOptions
- *
- * @typedef {{
  *    start:Node;
  *    start_offset:number;
  *    end: Node;
@@ -24,13 +19,11 @@
  */
 
 /**
- * @param {DebouncerOptions} options
  * @param {() => void} action
+ * @param {number} timeout
  * @returns {{update: {():void}}}
  */
-function create_debouncer(action, options) {
-  const { on_error, timeout } = options;
-
+function create_debouncer(action, timeout) {
   /** @type {number} **/
   let timer_id;
 
@@ -40,15 +33,7 @@ function create_debouncer(action, options) {
         clearTimeout(timer_id);
       }
 
-      timer_id = setTimeout(() => {
-        try {
-          action();
-        } catch (err) {
-          if (on_error) {
-            on_error(err);
-          }
-        }
-      }, timeout);
+      timer_id = setTimeout(() => action(), timeout);
     },
   };
 }
@@ -205,24 +190,17 @@ export function init_listener(options) {
     event_name = "brazil-mentioned",
   } = options ?? {};
 
-  let debouncer = create_debouncer(
-    () => {
-      if (detect_prime()) {
-        target.dispatchEvent(new CustomEvent(event_name, { bubbles: true }));
-      }
-    },
-    { timeout: debounce, on_error: console.error },
-  );
+  let debouncer = create_debouncer(() => {
+    if (detect_prime()) {
+      target.dispatchEvent(new CustomEvent(event_name, { bubbles: true }));
+    }
+  }, debounce);
 
-  let handler = () => {
-    debouncer.update();
-  };
-
-  source.addEventListener("selectionchange", handler);
+  source.addEventListener("selectionchange", debouncer.update);
 
   return {
     stop_it_get_some_help: () => {
-      source.removeEventListener(event_name, handler);
+      source.removeEventListener(event_name, debouncer.update);
     },
   };
 }

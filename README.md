@@ -11,7 +11,7 @@ Add `prime_detector.min.js` and use global `prime_detector` to setup your handle
 <html lang="">
   <head>
     <meta charset="utf-8">
-    <script src="https://unpkg.com/prime_detector@0.69.101/dist/prime_detector.min.js" ></script>
+    <script src="https://unpkg.com/prime_detector@0.69.102/dist/prime_detector.min.js" ></script>
     <script type="text/javascript">
          prime_detector.init_listener();
          window.addEventListener("brazil-mentioned", () => { alert("Hit!"); });
