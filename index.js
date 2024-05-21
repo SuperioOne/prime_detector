@@ -8,7 +8,6 @@
  *
  *  @typedef {{
  *    target?: Node;
- *    source?: Node;
  *    event_name?: string;
  *    debounce?: number;
  *  }} EventOptions
@@ -88,13 +87,31 @@ function get_selection() {
 }
 
 /**
- * Get current active selection and check if selection style matches with target user behavior.
+ * Checks if selection is part of the target Node tree.
+ * @param {Node} target
+ * @param {SelectionInfo} selection
+ * @returns {boolean}
+ */
+function contains(target, selection) {
+  return (
+    (target === selection.start || target.contains(selection.start)) &&
+    (target === selection.end || target.contains(selection.end))
+  );
+}
+
+/**
+ * Gets current active selection and checks if selection style matches with target user behavior.
+ * @param {Node} [target]
  * @returns {boolean} - Returns true if behavior matches, otherwise returns false.
  */
-export function detect_prime() {
+export function detect_prime(target) {
   const selection = get_selection();
 
-  if (!selection || selection.start_offset === 0) {
+  if (
+    !selection ||
+    selection.start_offset === 0 ||
+    (target && !contains(target, selection))
+  ) {
     return false;
   }
 
@@ -149,9 +166,21 @@ function is_terminal_char(value) {
     case 0x002c:
     case 0x002e:
     case 0x0020:
+    case 0x0021:
+    case 0x0022:
+    case 0x0027:
+    case 0x0028:
+    case 0x0029:
     case 0x003a:
     case 0x003b:
+    case 0x003f:
+    case 0x005b:
+    case 0x005d:
+    case 0x0060:
+    case 0x007b:
+    case 0x007d:
     case 0x00a0:
+    case 0x00b4:
     case 0x1680:
     case 0x2000:
     case 0x2001:
@@ -164,6 +193,10 @@ function is_terminal_char(value) {
     case 0x2008:
     case 0x2009:
     case 0x200a:
+    case 0x2018:
+    case 0x2019:
+    case 0x201c:
+    case 0x201d:
     case 0x2028:
     case 0x2029:
     case 0x202f:
@@ -183,24 +216,24 @@ function is_terminal_char(value) {
  * @returns {EventCancellationHandle} - Remove handle for disabling event listener.
  **/
 export function init_listener(options) {
-  const {
-    target = window,
-    source = document,
-    debounce = 1000,
-    event_name = "brazil-mentioned",
-  } = options ?? {};
+  const debounce = options?.debounce ?? 1000;
+  const event_name = options?.event_name ?? "brazil-mentioned";
+  const event_target = options?.target ?? window;
+  const target = options?.target;
 
   let debouncer = create_debouncer(() => {
-    if (detect_prime()) {
-      target.dispatchEvent(new CustomEvent(event_name, { bubbles: true }));
+    if (detect_prime(target)) {
+      event_target.dispatchEvent(
+        new CustomEvent(event_name, { bubbles: true }),
+      );
     }
   }, debounce);
 
-  source.addEventListener("selectionchange", debouncer.update);
+  document.addEventListener("selectionchange", debouncer.update);
 
   return {
     stop_it_get_some_help: () => {
-      source.removeEventListener(event_name, debouncer.update);
+      document.removeEventListener(event_name, debouncer.update);
     },
   };
 }

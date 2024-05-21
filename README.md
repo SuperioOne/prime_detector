@@ -11,7 +11,7 @@ Add `prime_detector.min.js` and use global `prime_detector` to setup your handle
 <html lang="">
   <head>
     <meta charset="utf-8">
-    <script src="https://unpkg.com/prime_detector@0.69.102/dist/prime_detector.min.js" ></script>
+    <script src="https://unpkg.com/prime_detector@0.69.103/dist/prime_detector.min.js" ></script>
     <script type="text/javascript">
          prime_detector.init_listener();
          window.addEventListener("brazil-mentioned", () => { alert("Hit!"); });
@@ -49,8 +49,7 @@ By default, `init_listener` listens `selectionchange` event on `document` and di
 
 ```javascript
 const options = {
-    target: my_article,    // Target DOM node to dispatch events. Default is 'window'.
-    source: my_article,    // Source DOM node to attach 'selectionchange' event. Default is 'document'.
+    target: my_article,    // Target DOM node to check for selection and dispatch events. Default is 'window'.
     debounce: 1500,        // Selection event debounce time. Default is 1000 milliseconds.
     event_name: "gotcha"   // Custom event name. Default event name is 'brazil-mentioned' to make it more immersive.
 };
@@ -66,6 +65,7 @@ If you don't want to use global event listener, you can always call the detectio
 import {detect_prime} from "prime_detector";
 
 function your_own_trigger(){
+    // detect_prime also accepts target node as an argument to limit scope.
     if (detect_prime()) {
         alert("HIT");
     } else {
